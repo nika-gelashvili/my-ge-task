@@ -46,6 +46,7 @@ class CartController extends Controller
         ]);
 
         $deletedItems = Cart::where(['id' => $request->post('product_id')])
+            ->where(['user_id' => 1])
             ->delete();
         if ($deletedItems == 0) {
             return response()->json([
@@ -70,6 +71,7 @@ class CartController extends Controller
         ]);
 
         Cart::where(['product_id' => $request->post('product_id')])
+            ->where(['user_id' => 1])
             ->update(['quantity' => $request->post('quantity')]);
 
         return response()->json([
@@ -83,9 +85,10 @@ class CartController extends Controller
      */
     public function getUserCart(Request $request)
     {
-        $groupsWithItems = UserProductGroup::with('productGroupItems')->get();
+        $groupsWithItems = UserProductGroup::with('productGroupItems')->where(['user_id' => 1])->get();
         $cartItems = Cart::select('cart.product_id', 'cart.quantity', 'products.price')
             ->leftJoin('products', 'products.id', '=', 'cart.product_id')
+            ->where(['user_id' => 1])
             ->get()
             ->toArray();
         $productsIds = array_column($cartItems, 'product_id');
