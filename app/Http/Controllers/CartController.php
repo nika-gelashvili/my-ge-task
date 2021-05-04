@@ -12,6 +12,8 @@ class CartController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * Api endpoint for adding product in cart
      */
     public function addProductInCart(Request $request)
     {
@@ -38,6 +40,8 @@ class CartController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * Api endpoint for removing product from cart
      */
     public function removeProductFromCart(Request $request)
     {
@@ -62,6 +66,8 @@ class CartController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * Api endpoint for setting cart product quantity
      */
     public function setCartProductQuantity(Request $request)
     {
@@ -82,10 +88,15 @@ class CartController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     *
+     * Api endpoint for getting user cart data
      */
     public function getUserCart(Request $request)
     {
-        $groupsWithItems = UserProductGroup::with('productGroupItems')->where(['user_id' => 1])->get();
+        $groupsWithItems = UserProductGroup::with('productGroupItems')
+            ->where(['user_id' => 1])
+            ->get();
+
         $cartItems = Cart::select('cart.product_id', 'cart.quantity', 'products.price')
             ->leftJoin('products', 'products.id', '=', 'cart.product_id')
             ->where(['cart.user_id' => 1])
