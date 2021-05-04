@@ -88,7 +88,7 @@ class CartController extends Controller
         $groupsWithItems = UserProductGroup::with('productGroupItems')->where(['user_id' => 1])->get();
         $cartItems = Cart::select('cart.product_id', 'cart.quantity', 'products.price')
             ->leftJoin('products', 'products.id', '=', 'cart.product_id')
-            ->where(['user_id' => 1])
+            ->where(['cart.user_id' => 1])
             ->get()
             ->toArray();
         $productsIds = array_column($cartItems, 'product_id');
